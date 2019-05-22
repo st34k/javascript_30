@@ -6,13 +6,22 @@ import Drum from './../Drum'
 
 export default class App extends React.Component {
   componentDidMount() {
-    window.addEventListener('keydown', this.playAudio)
+    window.addEventListener('keydown', this.playSound);
   }
 
-  playAudio = (e) => {
-    e.preventDefault()
-    const keyCode = e.keyCode
-    
+  componentWillMount() {
+    window.removeEventListener('keydown', this.playSound);
+  }
+
+  playSound = (e) => {
+    const audio = document.getElementById(e.keyCode);
+    if (!audio) return;
+    audio.play();
+  }
+
+  startPlayback = (keyCode) => {
+    const audio = document.getElementById(keyCode);
+    if (audio) return audio.play();
   }
 
   state = {drums};
@@ -22,9 +31,9 @@ export default class App extends React.Component {
       <div className="App">
         <div className="drumkit">
           <Header />
-            <ul>
-              {Object.keys(this.state.drums).map(drum => <Drum drumData={this.state.drums[drum]} key={drum} index={drum} />)}
-            </ul>
+            <div>
+              {Object.keys(this.state.drums).map(drum => <Drum drumData={this.state.drums[drum]} key={drum} /> )}
+            </div>
         </div>
       </div>
     );
